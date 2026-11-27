@@ -1,17 +1,25 @@
 name: Build ROM
-on: workflow_dispatch
+
+on:
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: namespace-profile-crd
     steps:
-      - uses: actions/checkout@v4
-      - name: Build Resurrected Remix
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check disk and install deps
         run: |
+          df -h
+          free -h
           sudo apt update
-          sudo apt install -y git repo
-          mkdir -p ~/rom && cd ~/rom
+          sudo apt install -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git git-lfs gnupg gperf imagemagick lib32readline-dev lib32z1-dev libelf-dev liblz4-tool libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python3
+
+      - name: Init repo and sync
+        run: |
+          mkdir -p ~/rom
+          cd ~/rom
           repo init -u https://github.com/crdroidandroid/android.git -b 12.1 --git-lfs --no-clone-bundle
-          repo sync -c -j$(nproc) --force-sync --no-clone-bundle --no-tags
-          source build/envsetup.sh
-          lunch lineage_lavender-userdebug
-          mka bacon -j$(nproc)
+          repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
