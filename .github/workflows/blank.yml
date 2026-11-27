@@ -1,0 +1,17 @@
+name: Build ROM
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: namespace-profile-default
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Resurrected Remix
+        run: |
+          sudo apt update
+          sudo apt install -y git repo
+          mkdir -p ~/rom && cd ~/rom
+          repo init -u https://github.com/crdroidandroid/android.git -b 12.1 --git-lfs --no-clone-bundle
+          repo sync -c -j$(nproc) --force-sync --no-clone-bundle --no-tags
+          source build/envsetup.sh
+          lunch lineage_lavender-userdebug
+          mka bacon -j$(nproc)
