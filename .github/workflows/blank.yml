@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: namespace-profile-crd
+    runs-on: namespace-profile-cedro
     steps:
       - name: Checkout
         uses: actions/checkout@v4
