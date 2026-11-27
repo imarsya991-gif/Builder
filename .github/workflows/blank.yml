@@ -2,7 +2,7 @@ name: Build ROM
 on: workflow_dispatch
 jobs:
   build:
-    runs-on: namespace-profile-cr
+    runs-on: namespace-profile-crd
     steps:
       - uses: actions/checkout@v4
       - name: Build Resurrected Remix
